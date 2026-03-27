@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EURO DIESEL - EURO DIESEL</title>
+    <title>EURO DIESEL - SISTEMA 004</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         :root {
@@ -14,14 +14,19 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--BG); color: var(--TEXT); display: flex; height: 100vh; overflow: hidden; }
 
+        /* MENU LATERAL PERSONALIZADO */
         .SIDEBAR { width: 280px; background: var(--SIDE); border-right: 1px solid var(--BORDER); display: flex; flex-direction: column; padding: 25px; flex-shrink: 0; overflow-y: auto; }
+        .LOGO-EURO { font-size: 1.6rem; font-weight: 900; text-align: center; margin-bottom: 35px; letter-spacing: 2px; }
+        .LOGO-EURO span:first-child { color: WHITE; }
+        .LOGO-EURO span:last-child { color: var(--PRIMARY); text-shadow: 0 0 10px rgba(47, 129, 247, 0.5); }
+
         .MAIN-WRAPPER { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 40px 20px; }
         .CONTAINER { width: 100%; max-width: 1100px; }
 
         @media (max-width: 900px) {
             body { flex-direction: column; }
             .SIDEBAR { width: 100%; height: 75px; flex-direction: row; border-top: 1px solid var(--BORDER); position: fixed; bottom: 0; left: 0; padding: 0; z-index: 1000; justify-content: space-around; align-items: center; }
-            .SIDEBAR div:first-child, .SIDEBAR .NAV-TEXT, .SIDEBAR .ADMIN-LABEL { display: none; }
+            .LOGO-EURO, .SIDEBAR .NAV-TEXT, .SIDEBAR .ADMIN-LABEL { display: none; }
             .MAIN-WRAPPER { padding: 20px 15px 100px 15px; }
         }
 
@@ -35,8 +40,6 @@
         .PROGRESS-FILL { height: 100%; width: 0%; transition: 1.5s ease; border-radius: 6px; }
 
         .BTN-MASTER { background: var(--PRIMARY); color: WHITE; border: none; border-radius: 8px; padding: 18px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; transition: 0.3s; }
-        .BTN-MASTER:disabled { background: #30363D; color: #8B949E; cursor: not-allowed; }
-        
         input, select { width: 100%; padding: 15px; background: #0D1117; border: 1px solid var(--BORDER); border-radius: 8px; color: WHITE; margin-bottom: 15px; font-weight: bold; }
         .MODAL { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .MODAL-CONTENT { background: var(--CARD); padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid var(--BORDER); max-height: 90vh; overflow-y: auto; }
@@ -73,7 +76,8 @@
     </div>
 
     <nav id="APP-SIDE" class="SIDEBAR HIDDEN">
-        <div style="font-size: 1.2rem; font-weight: 900; color: var(--PRIMARY); margin-bottom: 30px; text-align: center;">SISTEMA 004</div>
+        <div class="LOGO-EURO"><span>EURO</span><span>DIESEL</span></div>
+        
         <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">PAINEL</div></div>
         
         <div id="MASTER-TOOLS" class="HIDDEN">
@@ -85,7 +89,7 @@
         </div>
 
         <div style="margin-top: auto;">
-            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person_outline</span> <div class="NAV-TEXT">EDITAR PERFIL</div></div>
+            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person_outline</span> <div class="NAV-TEXT">PERFIL</div></div>
             <div class="NAV-ITEM" style="color: var(--DANGER)" onclick="location.reload()"><span class="material-icons-outlined">logout</span> <div class="NAV-TEXT">SAIR</div></div>
         </div>
     </nav>
@@ -117,7 +121,7 @@
 
     <div id="MODAL-PERFIL" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h2 style="text-align:center;">PERFIL</h2>
+            <h2 style="text-align:center;">EDITAR MEU PERFIL</h2>
             <label>NOME DE EXIBIÇÃO:</label> <input type="text" id="EDIT-U-NOME">
             <label>NOVA SENHA:</label> <input type="text" id="EDIT-U-SENHA">
             <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarAlteracaoPerfil()">SALVAR ALTERAÇÕES</button>
@@ -175,7 +179,6 @@
     let userLogado = ""; let alvoView = "";
     const sound = new Audio('https://www.myinstants.com/media/sounds/cash-register-purchase.mp3');
 
-    // --- LOGIN E CADASTRO (BLINDADOS) ---
     function tentarLogin() {
         const btn = document.getElementById('BTN-ENTRAR');
         const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
@@ -214,12 +217,10 @@
         renderDashboard();
     }
 
-    // --- DASHBOARD E MONITORAMENTO ADM ---
     function renderDashboard() {
         let dadosRaw = []; let meta = {s:12000, p:8000, g:20000};
         const allUsers = JSON.parse(localStorage.getItem('euro_users') || "[]");
         document.getElementById('BTN-MASTER-EDIT').classList.add('HIDDEN');
-        
         if(userLogado === "LEANDRO" && alvoView !== "GLOBAL" && alvoView !== "LEANDRO") document.getElementById('BTN-MASTER-EDIT').classList.remove('HIDDEN');
 
         if(alvoView === "GLOBAL") {
@@ -238,10 +239,8 @@
         let s=0, p=0, g=0; const tb = document.getElementById('MAIN-TABLE'); tb.innerHTML = "";
         dadosRaw.forEach((item, idx) => {
             const v = parseFloat(item.val) || 0;
-            // REGRA: ADM VÊ TUDO (INCLUINDO APAGADOS), USER SÓ VÊ O QUE NÃO ESTÁ APAGADO
             if(userLogado !== "LEANDRO" && item.excluido) return;
             if(!item.excluido) { g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v; }
-            
             tb.innerHTML += `<tr class="${item.excluido ? 'ITEM-EXCLUIDO' : ''}">
                 <td>${item.tipo}</td><td>${item.desc} ${item.dono?'<br><small>('+item.dono+')</small>':''}</td>
                 <td>R$ ${v.toLocaleString()}</td>
@@ -256,12 +255,8 @@
         updateBar('S', s, meta.s); updateBar('P', p, meta.p); updateBar('G', g, meta.g);
     }
 
-    // --- GERENCIAMENTO DE TOKENS E USUÁRIOS ---
     function gerarToken() {
-        const p1 = Math.random().toString(36).substr(2, 4).toUpperCase();
-        const p2 = Math.random().toString(36).substr(2, 4).toUpperCase();
-        const p3 = Math.random().toString(36).substr(2, 4).toUpperCase();
-        const tk = `EURO-${p1}-${p2}-${p3}`;
+        const tk = `EURO-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
         tks[tk] = { s: document.getElementById('M-TOKEN-S').value, p: document.getElementById('M-TOKEN-P').value, g: document.getElementById('M-TOKEN-G').value };
         localStorage.setItem('euro_tks', JSON.stringify(tks));
@@ -330,7 +325,6 @@
         openModal('MODAL-REPORTS');
     }
 
-    // --- AUXILIARES ---
     function atualizarListaMaster() {
         const nav = document.getElementById('LISTA-FUNCS'); const users = JSON.parse(localStorage.getItem('euro_users') || "[]"); nav.innerHTML = "";
         users.forEach(u => nav.innerHTML += `<div class="NAV-ITEM" onclick="carregarVisaoUser('${u.u}')"><span class="material-icons-outlined">person</span> <div class="NAV-TEXT">${u.u}</div></div>`);
