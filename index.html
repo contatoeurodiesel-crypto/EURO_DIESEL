@@ -166,12 +166,27 @@
 
     <div id="MODAL-ADD" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>LANÇAMENTO</h3>
-            <select id="IN-TIPO"><option value="SERVIÇO">SERVIÇO</option><option value="PEÇA">PEÇA</option></select>
-            <input type="text" id="IN-DESC" placeholder="DESCRIÇÃO DO TRABALHO">
-            <input type="number" id="IN-VAL" placeholder="VALOR R$">
-            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR LANÇAMENTO</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px;" onclick="closeModal('MODAL-ADD')">CANCELAR</button>
+            <h3 style="color: var(--PRIMARY); text-align: center;">NOVO LANÇAMENTO</h3>
+            
+            <label style="font-size: 0.7rem; color: #888;">TIPO DE ENTRADA:</label>
+            <select id="IN-TIPO">
+                <option value="SERVIÇO">SERVIÇO</option>
+                <option value="PEÇA">PEÇA</option>
+            </select>
+            
+            <label style="font-size: 0.7rem; color: #888;">DESCRIÇÃO:</label>
+            <input type="text" id="IN-DESC" placeholder="EX: DIAGNÓSTICO SCANIA G420">
+            
+            <label style="font-size: 0.7rem; color: #888;">VALOR (R$):</label>
+            <input type="number" id="IN-VAL" placeholder="0.00">
+            
+            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">
+                <span class="material-icons-outlined">check_circle</span> CONFIRMAR E SALVAR
+            </button>
+            
+            <button style="width:100%; background:none; border:none; color:#666; margin-top:15px; cursor:pointer;" onclick="closeModal('MODAL-ADD')">
+                CANCELAR E VOLTAR
+            </button>
         </div>
     </div>
 
