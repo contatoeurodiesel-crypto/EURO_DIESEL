@@ -351,12 +351,39 @@
     function closeModal(id) { document.getElementById(id).classList.add('HIDDEN'); }
     function switchAuth(b) { document.getElementById('LOGIN-BOX').classList.add('HIDDEN'); document.getElementById('REG-BOX').classList.add('HIDDEN'); document.getElementById(b).classList.remove('HIDDEN'); }
     function salvarItem() {
-        const d = document.getElementById('IN-DESC').value.toUpperCase(); const v = document.getElementById('IN-VAL').value;
-        if(!d || !v) return; sound.play(); 
+        const descField = document.getElementById('IN-DESC');
+        const valField = document.getElementById('IN-VAL');
+        const tipoField = document.getElementById('IN-TIPO');
+
+        const d = descField.value.toUpperCase().trim(); 
+        const v = valField.value;
+
+        if(!d || !v) {
+            alert("PREENCHA A DESCRIÇÃO E O VALOR!");
+            return;
+        }
+
+        // Toca o som de caixa registradora
+        sound.play(); 
+
+        // Salva no banco de dados local
         let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-        s.push({tipo: document.getElementById('IN-TIPO').value, desc: d, val: v, excluido: false});
+        s.push({
+            tipo: tipoField.value, 
+            desc: d, 
+            val: v, 
+            excluido: false,
+            data: new Date().toLocaleString() // Salva data e hora real
+        });
         localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s));
-        closeModal('MODAL-ADD'); renderDashboard();
+
+        // --- AQUI ESTÁ A MÁGICA: LIMPA TUDO PARA O PRÓXIMO ---
+        descField.value = ""; 
+        valField.value = "";
+        tipoField.selectedIndex = 0; // Volta para 'SERVIÇO'
+
+        closeModal('MODAL-ADD'); 
+        renderDashboard();
     }
     function excluirTemp(idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d[idx].excluido = true; localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); }
     function eliminarDefinitivo(dono, idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+dono, JSON.stringify(d)); renderDashboard(); }
