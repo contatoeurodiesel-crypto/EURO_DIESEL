@@ -7,9 +7,13 @@ export default async function handler(req, res) {
 
     const { servicos, pecas, total } = req.body;
 
-    const prompt = `Consultor Euro Diesel. Analise: Serviços ${servicos}, Peças ${pecas}, Total ${total}. 
-    Dê um conselho curto e motivador de especialista em diesel. Máximo 3 frases.`;
-
+    const prompt = `Você é o Engenheiro Chefe da Euro Diesel Mecatrônica. 
+Analise os números: Serviços ${servicos}, Peças ${pecas}, Total ${total}. 
+Dê um conselho técnico de ALTO NÍVEL (Dica de Ouro). 
+Exemplos: Se o faturamento de serviços estiver baixo, sugira focar em Diagnóstico Computadorizado em Scania/Volvo. 
+Se as peças estiverem baixas, sugira revisão de bombas injetoras e bicos. 
+Use termos técnicos como "Unidades Injetoras", "Sistemas Common Rail" e "Scanner Avançado". 
+Seja motivador, profissional e curto (máximo 3 frases).`;
     try {
         const result = await model.generateContent(prompt);
         const response = await result.response;
