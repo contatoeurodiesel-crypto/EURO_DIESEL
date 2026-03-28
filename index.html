@@ -14,7 +14,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--BG); color: var(--TEXT); display: flex; height: 100vh; overflow: hidden; }
 
-        /* MENU LATERAL PERSONALIZADO */
+        /* MENU LATERAL PERSONALIZADO EURO DIESEL */
         .SIDEBAR { width: 280px; background: var(--SIDE); border-right: 1px solid var(--BORDER); display: flex; flex-direction: column; padding: 25px; flex-shrink: 0; overflow-y: auto; }
         .LOGO-EURO { font-size: 1.6rem; font-weight: 900; text-align: center; margin-bottom: 35px; letter-spacing: 2px; }
         .LOGO-EURO span:first-child { color: WHITE; }
@@ -59,27 +59,22 @@
             <input type="text" id="U-LOGIN" placeholder="USUÁRIO">
             <input type="password" id="P-LOGIN" placeholder="SENHA">
             <button id="BTN-ENTRAR" class="BTN-MASTER" onclick="tentarLogin()">ENTRAR</button>
-            <p style="text-align:center; margin-top:30px; font-size:0.8rem; color:#888;">
-                NÃO TEM CONTA? <b style="color: var(--PRIMARY); cursor:pointer;" onclick="switchAuth('REG-BOX')">CADASTRE-SE AQUI</b>
-            </p>
+            <p style="text-align:center; margin-top:30px; font-size:0.8rem; color:#888;">NÃO TEM CONTA? <b style="color: var(--PRIMARY); cursor:pointer;" onclick="switchAuth('REG-BOX')">CADASTRE-SE AQUI</b></p>
         </div>
-
         <div id="REG-BOX" class="MODAL-CONTENT HIDDEN">
             <h2 style="text-align:center; color: var(--SUCCESS);">CADASTRO</h2>
             <input type="text" id="U-REG" placeholder="NOME COMPLETO">
             <input type="password" id="P-REG" placeholder="CRIE SUA SENHA">
             <input type="text" id="T-REG" placeholder="TOKEN DE ATIVAÇÃO">
             <button id="BTN-REG" class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">ATIVAR CONTA</button>
-            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 15px; font-size: 0.75rem;" onclick="window.open('https://wa.me/5569999999904?text=SOLICITO%20TOKEN%20DE%20ACESSO')">OBTER TOKEN DE ACESSO</button>
+            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 15px; font-size: 0.75rem;" onclick="window.open('https://wa.me/5569999999904?text=SOLICITO%20TOKEN')">OBTER TOKEN</button>
             <p style="text-align:center; margin-top:20px; font-size:0.8rem; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR AO LOGIN</p>
         </div>
     </div>
 
     <nav id="APP-SIDE" class="SIDEBAR HIDDEN">
         <div class="LOGO-EURO"><span>EURO</span><span>DIESEL</span></div>
-        
         <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">PAINEL</div></div>
-        
         <div id="MASTER-TOOLS" class="HIDDEN">
             <div class="ADMIN-LABEL" style="font-size: 0.6rem; color: #555; margin: 20px 10px 10px 10px;">ADMINISTRAÇÃO</div>
             <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">public</span> <div class="NAV-TEXT">VISÃO GERAL</div></div>
@@ -87,7 +82,6 @@
             <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">vpn_key</span> <div class="NAV-TEXT">GERAR TOKEN</div></div>
             <div id="LISTA-FUNCS"></div>
         </div>
-
         <div style="margin-top: auto;">
             <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person_outline</span> <div class="NAV-TEXT">PERFIL</div></div>
             <div class="NAV-ITEM" style="color: var(--DANGER)" onclick="location.reload()"><span class="material-icons-outlined">logout</span> <div class="NAV-TEXT">SAIR</div></div>
@@ -103,13 +97,11 @@
                     <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + NOVO LANÇAMENTO</button>
                 </div>
             </div>
-
             <div class="STATS-GRID">
                 <div class="STAT-CARD"><b>TOTAL GERAL</b> <span id="VAL-G">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-G" class="PROGRESS-FILL" style="background: var(--PURPLE)"></div></div></div>
                 <div class="STAT-CARD"><b>SERVIÇOS</b> <span id="VAL-S">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-S" class="PROGRESS-FILL" style="background: var(--PRIMARY)"></div></div></div>
                 <div class="STAT-CARD"><b>PEÇAS</b> <span id="VAL-P">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-P" class="PROGRESS-FILL" style="background: var(--SUCCESS)"></div></div></div>
             </div>
-
             <div style="background: var(--CARD); border-radius: 12px; border: 1px solid var(--BORDER); overflow-x: auto;">
                 <table>
                     <thead><tr><th>TIPO</th><th>DESCRIÇÃO</th><th>VALOR</th><th>AÇÕES</th></tr></thead>
@@ -119,95 +111,39 @@
         </div>
     </div>
 
-    <div id="MODAL-PERFIL" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h2 style="text-align:center;">EDITAR MEU PERFIL</h2>
-            <label>NOME DE EXIBIÇÃO:</label> <input type="text" id="EDIT-U-NOME">
-            <label>NOVA SENHA:</label> <input type="text" id="EDIT-U-SENHA">
-            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarAlteracaoPerfil()">SALVAR ALTERAÇÕES</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:15px; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">CANCELAR</button>
-        </div>
-    </div>
-
-    <div id="MODAL-TOKEN" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h3>NOVO ACESSO (TOKEN)</h3>
-            <label>META SERVIÇOS (R$):</label> <input type="number" id="M-TOKEN-S" value="10000">
-            <label>META PEÇAS (R$):</label> <input type="number" id="M-TOKEN-P" value="5000">
-            <label>META GERAL (R$):</label> <input type="number" id="M-TOKEN-G" value="15000">
-            <button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE ÚNICA</button>
-            <div id="TK-BOX" class="HIDDEN" style="margin-top:20px; text-align:center; border:2px dashed var(--CYAN); padding:15px; background: #0D1117;">
-                <b id="TK-VAL" style="font-family: monospace; letter-spacing: 2px; color: var(--CYAN); font-size: 1.1rem;"></b>
-            </div>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:20px; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button>
-        </div>
-    </div>
-
-    <div id="MODAL-MAIS-CONTROLE" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h2 style="color: var(--ORANGE); text-align:center;">MASTER: <span id="NOME-ALVO"></span></h2>
-            <label>SENHA ATUAL/NOVA:</label> <input type="text" id="MASTER-NOVA-SENHA">
-            <label>META SERVIÇO:</label> <input type="number" id="M-META-S">
-            <label>META PEÇA:</label> <input type="number" id="M-META-P">
-            <label>META GERAL:</label> <input type="number" id="M-META-G">
-            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarTudoMestre()">ATUALIZAR FUNCIONÁRIO</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:15px;" onclick="closeModal('MODAL-MAIS-CONTROLE')">CANCELAR</button>
-        </div>
-    </div>
-
-    <div id="MODAL-REPORTS" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h2 style="color: var(--CYAN); text-align:center;">RELATÓRIOS GERAIS</h2>
-            <button class="BTN-MASTER" style="background: var(--SUCCESS); margin-bottom: 20px;" onclick="exportarCSV()">BAIXAR PLANILHA EXCEL (.CSV)</button>
-            <div id="REP-RANKING" style="background:#161B22; padding:10px; border-radius:10px;"></div>
-            <button class="BTN-MASTER" style="margin-top:20px; background:#444;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button>
-        </div>
-    </div>
-
     <div id="MODAL-ADD" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3 style="color: var(--PRIMARY); text-align: center;">NOVO LANÇAMENTO</h3>
-            
-            <label style="font-size: 0.7rem; color: #888;">TIPO DE ENTRADA:</label>
-            <select id="IN-TIPO">
-                <option value="SERVIÇO">SERVIÇO</option>
-                <option value="PEÇA">PEÇA</option>
-            </select>
-            
+            <h3 style="color: var(--PRIMARY); text-align: center;">LANÇAMENTO</h3>
+            <label style="font-size: 0.7rem; color: #888;">TIPO:</label>
+            <select id="IN-TIPO"><option value="SERVIÇO">SERVIÇO</option><option value="PEÇA">PEÇA</option></select>
             <label style="font-size: 0.7rem; color: #888;">DESCRIÇÃO:</label>
-            <input type="text" id="IN-DESC" placeholder="EX: DIAGNÓSTICO SCANIA G420">
-            
+            <input type="text" id="IN-DESC" placeholder="EX: REVISÃO BOMBA">
             <label style="font-size: 0.7rem; color: #888;">VALOR (R$):</label>
             <input type="number" id="IN-VAL" placeholder="0.00">
-            
-            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">
-                <span class="material-icons-outlined">check_circle</span> CONFIRMAR E SALVAR
-            </button>
-            
-            <button style="width:100%; background:none; border:none; color:#666; margin-top:15px; cursor:pointer;" onclick="closeModal('MODAL-ADD')">
-                CANCELAR E VOLTAR
-            </button>
+            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR</button>
+            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px;" onclick="closeModal('MODAL-ADD')">CANCELAR</button>
         </div>
     </div>
+
+    <div id="MODAL-PERFIL" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h2>PERFIL</h2><input type="text" id="EDIT-U-NOME"><input type="text" id="EDIT-U-SENHA"><button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarAlteracaoPerfil()">SALVAR</button><button style="width:100%;" onclick="closeModal('MODAL-PERFIL')">VOLTAR</button></div></div>
+    <div id="MODAL-TOKEN" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h3>NOVO TOKEN</h3><input type="number" id="M-TOKEN-S" value="10000" placeholder="Meta Serviço"><input type="number" id="M-TOKEN-P" value="5000" placeholder="Meta Peça"><input type="number" id="M-TOKEN-G" value="15000" placeholder="Meta Geral"><button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE</button><div id="TK-BOX" class="HIDDEN" style="margin-top:20px; text-align:center;"><b id="TK-VAL" style="color: var(--CYAN);"></b></div><button style="width:100%;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button></div></div>
+    <div id="MODAL-MAIS-CONTROLE" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h2>CONTROLE MASTER: <span id="NOME-ALVO"></span></h2><input type="text" id="MASTER-NOVA-SENHA"><input type="number" id="M-META-S"><input type="number" id="M-META-P"><input type="number" id="M-META-G"><button class="BTN-MASTER" onclick="salvarTudoMestre()">ATUALIZAR</button><button style="width:100%;" onclick="closeModal('MODAL-MAIS-CONTROLE')">FECHAR</button></div></div>
+    <div id="MODAL-REPORTS" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h2>RELATÓRIOS</h2><button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="exportarCSV()">BAIXAR EXCEL</button><div id="REP-RANKING" style="margin-top:15px;"></div><button style="width:100%;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button></div></div>
 
 <script>
     let userLogado = ""; let alvoView = "";
     const sound = new Audio('https://www.myinstants.com/media/sounds/cash-register-purchase.mp3');
 
+    // --- FUNÇÕES DE SISTEMA ---
     function tentarLogin() {
-        const btn = document.getElementById('BTN-ENTRAR');
         const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
         const p = document.getElementById('P-LOGIN').value;
-        btn.disabled = true; btn.innerText = "CARREGANDO...";
-        setTimeout(() => {
-            const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-            if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
-            else {
-                const f = users.find(x => x.u === u && x.p === p);
-                if(f) logar(u); 
-                else { alert("USUÁRIO OU SENHA INVÁLIDOS!"); btn.disabled = false; btn.innerText = "ENTRAR"; }
-            }
-        }, 600);
+        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
+        else {
+            const f = users.find(x => x.u === u && x.p === p);
+            if(f) logar(u); else alert("ACESSO NEGADO!");
+        }
     }
 
     function tentarRegistro() {
@@ -232,6 +168,44 @@
         renderDashboard();
     }
 
+    // --- SALVAR ITEM (COM LIMPEZA PROFISSIONAL) ---
+    function salvarItem() {
+        const descField = document.getElementById('IN-DESC');
+        const valField = document.getElementById('IN-VAL');
+        const tipoField = document.getElementById('IN-TIPO');
+
+        const d = descField.value.toUpperCase().trim(); 
+        const v = valField.value;
+
+        if(!d || !v) {
+            alert("PREENCHA OS CAMPOS!");
+            return;
+        }
+
+        sound.play(); 
+        let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
+        s.push({tipo: tipoField.value, desc: d, val: v, excluido: false, data: new Date().toLocaleString()});
+        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s));
+
+        // MÁGICA: LIMPA OS CAMPOS PARA O PRÓXIMO LANÇAMENTO
+        descField.value = ""; 
+        valField.value = "";
+        tipoField.selectedIndex = 0;
+
+        closeModal('MODAL-ADD'); 
+        renderDashboard();
+    }
+
+    function executarEnter() {
+        if (!document.getElementById('AUTH-SCREEN').classList.contains('HIDDEN')) {
+            if (!document.getElementById('LOGIN-BOX').classList.contains('HIDDEN')) tentarLogin();
+            else tentarRegistro();
+        } else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) {
+            salvarItem(); 
+        }
+    }
+
+    // --- DASHBOARD RENDER ---
     function renderDashboard() {
         let dadosRaw = []; let meta = {s:12000, p:8000, g:20000};
         const allUsers = JSON.parse(localStorage.getItem('euro_users') || "[]");
@@ -270,6 +244,7 @@
         updateBar('S', s, meta.s); updateBar('P', p, meta.p); updateBar('G', g, meta.g);
     }
 
+    // --- AUXILIARES ---
     function gerarToken() {
         const tk = `EURO-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
@@ -278,20 +253,16 @@
         document.getElementById('TK-VAL').innerText = tk;
         document.getElementById('TK-BOX').classList.remove('HIDDEN');
     }
-
     function abrirEdicaoPerfil() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
         const u = users.find(x => x.u === userLogado) || {u: "LEANDRO", p: "12344321"};
-        document.getElementById('EDIT-U-NOME').value = u.u;
-        document.getElementById('EDIT-U-SENHA').value = u.p;
+        document.getElementById('EDIT-U-NOME').value = u.u; document.getElementById('EDIT-U-SENHA').value = u.p;
         openModal('MODAL-PERFIL');
     }
-
     function salvarAlteracaoPerfil() {
         const novoN = document.getElementById('EDIT-U-NOME').value.toUpperCase().trim();
         const novoS = document.getElementById('EDIT-U-SENHA').value;
-        if(userLogado === "LEANDRO") { alert("ADM MESTRE ATUALIZADO!"); }
-        else {
+        if(userLogado !== "LEANDRO") {
             let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
             const idx = users.findIndex(x => x.u === userLogado);
             if(idx !== -1) {
@@ -300,12 +271,11 @@
                 if(novoN !== userLogado) localStorage.removeItem('ed_data_' + userLogado);
                 users[idx].u = novoN; users[idx].p = novoS;
                 localStorage.setItem('euro_users', JSON.stringify(users));
-                alert("PERFIL ATUALIZADO! FAÇA LOGIN NOVAMENTE."); location.reload();
+                alert("PERFIL ATUALIZADO! RELOGUE."); location.reload();
             }
-        }
+        } else alert("PERFIL ADM SALVO!");
         closeModal('MODAL-PERFIL');
     }
-
     function salvarTudoMestre() {
         let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
         const idx = users.findIndex(x => x.u === alvoView);
@@ -313,93 +283,42 @@
             users[idx].p = document.getElementById('MASTER-NOVA-SENHA').value;
             users[idx].metas = { s: document.getElementById('M-META-S').value, p: document.getElementById('M-META-P').value, g: document.getElementById('M-META-G').value };
             localStorage.setItem('euro_users', JSON.stringify(users));
-            alert("DADOS ATUALIZADOS!"); renderDashboard(); closeModal('MODAL-MAIS-CONTROLE');
+            alert("FUNCIONÁRIO ATUALIZADO!"); renderDashboard(); closeModal('MODAL-MAIS-CONTROLE');
         }
     }
-
     function exportarCSV() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        let csv = "USUARIO;TIPO;DESC;VALOR;STATUS\n";
+        let csv = "USUARIO;TIPO;DESC;VALOR;DATA;STATUS\n";
         users.forEach(u => {
             const d = JSON.parse(localStorage.getItem('ed_data_' + u.u) || "[]");
-            d.forEach(i => csv += `${u.u};${i.tipo};${i.desc};${i.val};${i.excluido?'APAGADO':'OK'}\n`);
+            d.forEach(i => csv += `${u.u};${i.tipo};${i.desc};${i.val};${i.data};${i.excluido?'APAGADO':'OK'}\n`);
         });
         const blob = new Blob([csv], {type:'text/csv'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='RELATORIO_EURODIESEL.csv'; a.click();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='RELATORIO_EURO.csv'; a.click();
     }
-
     function abrirRelatorios() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
         let rank = ""; 
         users.forEach(u => {
             const d = JSON.parse(localStorage.getItem('ed_data_' + u.u) || "[]");
             const total = d.filter(x => !x.excluido).reduce((a, b) => a + Number(b.val), 0);
-            rank += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333;"><span>${u.u}</span> <b>R$ ${total.toLocaleString()}</b></div>`;
+            rank += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333;"><span>${u.u}</span> <b>R$ ${total.toLocaleString()}</b></div>`;
         });
         document.getElementById('REP-RANKING').innerHTML = rank;
         openModal('MODAL-REPORTS');
     }
-
     function atualizarListaMaster() {
         const nav = document.getElementById('LISTA-FUNCS'); const users = JSON.parse(localStorage.getItem('euro_users') || "[]"); nav.innerHTML = "";
         users.forEach(u => nav.innerHTML += `<div class="NAV-ITEM" onclick="carregarVisaoUser('${u.u}')"><span class="material-icons-outlined">person</span> <div class="NAV-TEXT">${u.u}</div></div>`);
     }
     function carregarVisaoUser(n) { alvoView = n; document.getElementById('V-TITLE').innerText = "VISTA: " + n; renderDashboard(); }
-    function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "VISÃO GLOBAL"; renderDashboard(); }
+    function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "GLOBAL"; renderDashboard(); }
     function carregarVisaoPropria() { alvoView = userLogado; document.getElementById('V-TITLE').innerText = "MEU PAINEL"; renderDashboard(); }
     function openModal(id) { document.getElementById(id).classList.remove('HIDDEN'); }
     function closeModal(id) { document.getElementById(id).classList.add('HIDDEN'); }
     function switchAuth(b) { document.getElementById('LOGIN-BOX').classList.add('HIDDEN'); document.getElementById('REG-BOX').classList.add('HIDDEN'); document.getElementById(b).classList.remove('HIDDEN'); }
-    function salvarItem() {
-        const descField = document.getElementById('IN-DESC');
-        const valField = document.getElementById('IN-VAL');
-        const tipoField = document.getElementById('IN-TIPO');
-
-        const d = descField.value.toUpperCase().trim(); 
-        const v = valField.value;
-
-        if(!d || !v) {
-            // Se tentar dar enter com campo vazio, ele avisa e não fecha
-            alert("PREENCHA A DESCRIÇÃO E O VALOR!");
-            return;
-        }
-
-        // Toca o som de caixa registradora
-        sound.play(); 
-
-        // Salva no banco de dados local da Euro Diesel
-        let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-        s.push({
-            tipo: tipoField.value, 
-            desc: d, 
-            val: v, 
-            excluido: false,
-            data: new Date().toLocaleString()
-        });
-        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s));
-
-        // --- LIMPEZA TOTAL DOS CAMPOS ---
-        descField.value = ""; 
-        valField.value = "";
-        tipoField.selectedIndex = 0; // Volta para 'SERVIÇO' por padrão
-
-        // Fecha o modal e atualiza a tela na hora
-        closeModal('MODAL-ADD'); 
-        renderDashboard();
-    }
     function excluirTemp(idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d[idx].excluido = true; localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); }
     function eliminarDefinitivo(dono, idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+dono, JSON.stringify(d)); renderDashboard(); }
-    function executarEnter() {
-        // Se o modal de login estiver aberto
-        if (!document.getElementById('AUTH-SCREEN').classList.contains('HIDDEN')) {
-            if (!document.getElementById('LOGIN-BOX').classList.contains('HIDDEN')) tentarLogin();
-            else tentarRegistro();
-        } 
-        // SE O MODAL DE LANÇAMENTO ESTIVER ABERTO, SALVA E FECHA AO APERTAR ENTER
-        else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) {
-            salvarItem(); 
-        }
-    }
     function abrirPainelMestre() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
         const u = users.find(x => x.u === alvoView);
