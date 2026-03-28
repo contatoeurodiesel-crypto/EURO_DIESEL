@@ -359,6 +359,7 @@
         const v = valField.value;
 
         if(!d || !v) {
+            // Se tentar dar enter com campo vazio, ele avisa e não fecha
             alert("PREENCHA A DESCRIÇÃO E O VALOR!");
             return;
         }
@@ -366,32 +367,38 @@
         // Toca o som de caixa registradora
         sound.play(); 
 
-        // Salva no banco de dados local
+        // Salva no banco de dados local da Euro Diesel
         let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
         s.push({
             tipo: tipoField.value, 
             desc: d, 
             val: v, 
             excluido: false,
-            data: new Date().toLocaleString() // Salva data e hora real
+            data: new Date().toLocaleString()
         });
         localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s));
 
-        // --- AQUI ESTÁ A MÁGICA: LIMPA TUDO PARA O PRÓXIMO ---
+        // --- LIMPEZA TOTAL DOS CAMPOS ---
         descField.value = ""; 
         valField.value = "";
-        tipoField.selectedIndex = 0; // Volta para 'SERVIÇO'
+        tipoField.selectedIndex = 0; // Volta para 'SERVIÇO' por padrão
 
+        // Fecha o modal e atualiza a tela na hora
         closeModal('MODAL-ADD'); 
         renderDashboard();
     }
     function excluirTemp(idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d[idx].excluido = true; localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); }
     function eliminarDefinitivo(dono, idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+dono, JSON.stringify(d)); renderDashboard(); }
     function executarEnter() {
+        // Se o modal de login estiver aberto
         if (!document.getElementById('AUTH-SCREEN').classList.contains('HIDDEN')) {
             if (!document.getElementById('LOGIN-BOX').classList.contains('HIDDEN')) tentarLogin();
             else tentarRegistro();
-        } else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) salvarItem();
+        } 
+        // SE O MODAL DE LANÇAMENTO ESTIVER ABERTO, SALVA E FECHA AO APERTAR ENTER
+        else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) {
+            salvarItem(); 
+        }
     }
     function abrirPainelMestre() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
