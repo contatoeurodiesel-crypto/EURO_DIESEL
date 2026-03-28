@@ -160,6 +160,11 @@
             .STATS-GRID { grid-template-columns: 1fr; }
         }
     </style>
+
+    <script type="importmap">
+        { "imports": { "@google/generative-ai": "https://esm.run/@google/generative-ai" } }
+    </script>
+
 </head>
 <body onkeydown="if(event.key==='Enter') executarEnter()">
 
@@ -205,9 +210,21 @@
                     <h1 id="V-TITLE" style="font-family:'Orbitron'; margin:0; font-size:2rem; letter-spacing:2px;">DASHBOARD</h1>
                 </div>
                 <div style="display:flex; gap:15px;">
+                    <button class="BTN-MASTER" style="background: linear-gradient(90deg, #7000FF, #00D4FF); width: auto; padding: 15px;" onclick="consultarIA_EuroDiesel()">
+                        <span class="material-icons-outlined">psychology</span> IA INSIGHT
+                    </button>
+
                     <button id="BTN-MASTER-EDIT" class="BTN-MASTER HIDDEN" style="background: rgba(255,255,255,0.03); width: auto; padding: 15px; border: 1px solid var(--BORDER);" onclick="abrirPainelMestre()"><span class="material-icons-outlined" style="color:var(--GOLD)">admin_panel_settings</span></button>
                     <button class="BTN-MASTER" style="width: auto; padding: 18px 40px;" onclick="openModal('MODAL-ADD')"> + NOVO LANÇAMENTO</button>
                 </div>
+            </div>
+
+            <div id="IA-RESPONSE" class="HIDDEN" style="padding:20px; border:1px dashed var(--ACCENT); margin-bottom:40px; border-radius:24px; background: rgba(112, 0, 255, 0.05);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <span class="material-icons-outlined" style="color:var(--PRIMARY)">auto_awesome</span>
+                    <b style="color:var(--PRIMARY); font-size:0.7rem; letter-spacing:2px;">ANÁLISE EURO DIESEL:</b>
+                </div>
+                <p id="IA-TEXT" style="color:white; text-transform:none; font-size:0.9rem; line-height:1.5;"></p>
             </div>
 
             <div class="STATS-GRID">
@@ -370,7 +387,7 @@
         upd('S', s, meta.s); upd('P', p, meta.p); upd('G', g, meta.g);
     }
 
-    // --- FUNÇÕES AUXILIARES (PERFEITAS COMO ESTAVAM) ---
+    // --- FUNÇÕES AUXILIARES ---
     function openModal(id) { document.getElementById(id).classList.remove('HIDDEN'); }
     function closeModal(id) { document.getElementById(id).classList.add('HIDDEN'); }
     function switchAuth(b) { document.getElementById('LOGIN-BOX').classList.add('HIDDEN'); document.getElementById('REG-BOX').classList.add('HIDDEN'); document.getElementById(b).classList.remove('HIDDEN'); }
@@ -378,7 +395,7 @@
     function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "VISÃO GLOBAL"; renderDashboard(); }
     function carregarVisaoUser(n) { alvoView = n; document.getElementById('V-TITLE').innerText = "VISTA: " + n; renderDashboard(); }
     
-    // --- FUNÇÕES DE TOKEN (WHATSAPP INTEGRADO) ---
+    // --- FUNÇÕES DE TOKEN ---
     function gerarToken() {
         const tk = `EURO-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
@@ -499,5 +516,37 @@
         }
     }
 </script>
+
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const genAI = new GoogleGenerativeAI("AIzaSyDutmHbqUrdKrtOtsKoz1DtQqsI6_bQe-c");
+
+    window.consultarIA_EuroDiesel = async function() {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const resBox = document.getElementById('IA-RESPONSE');
+        const resText = document.getElementById('IA-TEXT');
+        
+        resBox.classList.remove('HIDDEN');
+        resText.innerText = "IA ANALISANDO PERFORMANCE DA EURO DIESEL...";
+
+        // Pega os valores reais que já estão na tela
+        const s = document.getElementById('VAL-S').innerText;
+        const p = document.getElementById('VAL-P').innerText;
+        const g = document.getElementById('VAL-G').innerText;
+
+        const prompt = `Você é o consultor master da Euro Diesel Mecatrônica. 
+        Analise esses números atuais: Serviços ${s}, Peças ${p}, Total ${g}.
+        Dê um conselho curto, profissional e motivador para o dono da oficina sobre como aumentar o faturamento ou equilibrar esses números. 
+        Fale como um especialista em mecatrônica diesel. Máximo 3 frases.`;
+
+        try {
+            const result = await model.generateContent(prompt);
+            resText.innerText = result.response.text();
+        } catch (e) { 
+            resText.innerText = "ERRO: VERIFIQUE SUA CHAVE API NO CÓDIGO."; 
+        }
+    }
+</script>
+
 </body>
 </html>
