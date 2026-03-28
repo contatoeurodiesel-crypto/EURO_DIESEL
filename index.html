@@ -241,7 +241,25 @@
 
     <div id="MODAL-PERFIL" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h2 style="font-family:Orbitron; margin-bottom:25px;">MEU PERFIL</h2><input type="text" id="EDIT-U-NOME"><input type="text" id="EDIT-U-SENHA"><button class="BTN-MASTER" onclick="salvarAlteracaoPerfil()">SALVAR ALTERAÇÕES</button><button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">FECHAR</button></div></div>
     
-    <div id="MODAL-TOKEN" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h3 style="font-family:Orbitron; margin-bottom:25px;">GERAR TOKEN</h3><input type="number" id="M-TOKEN-S" value="12000" placeholder="Meta Serv"><input type="number" id="M-TOKEN-P" value="8000" placeholder="Meta Peça"><input type="number" id="M-TOKEN-G" value="20000" placeholder="Meta Geral"><button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE ÚNICA</button><div id="TK-BOX" class="HIDDEN" style="margin-top:20px; padding:20px; background:rgba(0,0,0,0.5); border-radius:12px; text-align:center;"><b id="TK-VAL" style="color: var(--PRIMARY); font-size:1.2rem; font-family:Orbitron;"></b></div><button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button></div></div>
+    <div id="MODAL-TOKEN" class="MODAL HIDDEN">
+        <div class="MODAL-CONTENT">
+            <h3 style="font-family:Orbitron; margin-bottom:25px; text-align: center;">GERAR TOKEN ACESSO</h3>
+            <input type="number" id="M-TOKEN-S" value="12000" placeholder="Meta Serv">
+            <input type="number" id="M-TOKEN-P" value="8000" placeholder="Meta Peça">
+            <input type="number" id="M-TOKEN-G" value="20000" placeholder="Meta Geral">
+            
+            <button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE ÚNICA</button>
+            
+            <div id="TK-BOX" class="HIDDEN" style="margin-top:20px; padding:20px; background:rgba(0,0,0,0.5); border-radius:12px; text-align:center; border: 1px dashed var(--PRIMARY);">
+                <b id="TK-VAL" style="color: var(--PRIMARY); font-size:1.2rem; font-family:Orbitron; letter-spacing: 2px;"></b>
+                <button class="BTN-MASTER" style="margin-top: 15px; background: #25D366; font-size: 0.7rem;" onclick="enviarTokenWhats()">
+                    <span class="material-icons-outlined">share</span> ENVIAR VIA WHATSAPP
+                </button>
+            </div>
+            
+            <button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button>
+        </div>
+    </div>
 
     <div id="MODAL-REPORTS" class="MODAL HIDDEN"><div class="MODAL-CONTENT"><h2 style="font-family:Orbitron; margin-bottom:25px;">RELATÓRIOS</h2><button class="BTN-MASTER" style="background:var(--SUCCESS)" onclick="exportarCSV()">EXPORTAR EXCEL (.CSV)</button><div id="REP-RANKING" style="margin-top:25px;"></div><button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button></div></div>
 
@@ -355,13 +373,39 @@
     function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "VISÃO GLOBAL"; renderDashboard(); }
     function carregarVisaoUser(n) { alvoView = n; document.getElementById('V-TITLE').innerText = "VISTA: " + n; renderDashboard(); }
     
+    // --- FUNÇÕES DE TOKEN (WHATSAPP INTEGRADO) ---
     function gerarToken() {
         const tk = `EURO-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
-        tks[tk] = { s: document.getElementById('M-TOKEN-S').value, p: document.getElementById('M-TOKEN-P').value, g: document.getElementById('M-TOKEN-G').value };
+        const metas = { 
+            s: document.getElementById('M-TOKEN-S').value, 
+            p: document.getElementById('M-TOKEN-P').value, 
+            g: document.getElementById('M-TOKEN-G').value 
+        };
+        tks[tk] = metas;
         localStorage.setItem('euro_tks', JSON.stringify(tks));
         document.getElementById('TK-VAL').innerText = tk;
         document.getElementById('TK-BOX').classList.remove('HIDDEN');
+    }
+
+    function enviarTokenWhats() {
+        const tk = document.getElementById('TK-VAL').innerText;
+        const ms = document.getElementById('M-TOKEN-S').value;
+        const mp = document.getElementById('M-TOKEN-P').value;
+        const mg = document.getElementById('M-TOKEN-G').value;
+        
+        const msg = window.encodeURIComponent(
+            `*EURO DIESEL - ACESSO SISTEMA*\n\n` +
+            `Olá, aqui está seu token de ativação:\n` +
+            `🔑 *TOKEN:* ${tk}\n\n` +
+            `*SUAS METAS MENSAIS:*\n` +
+            `🛠 SERV: R$ ${Number(ms).toLocaleString()}\n` +
+            `📦 PEÇAS: R$ ${Number(mp).toLocaleString()}\n` +
+            `🏁 GERAL: R$ ${Number(mg).toLocaleString()}\n\n` +
+            `Acesse o painel e realize seu cadastro!`
+        );
+        
+        window.open(`https://wa.me/?text=${msg}`);
     }
 
     function atualizarListaMaster() {
