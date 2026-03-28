@@ -544,23 +544,24 @@
         };
 
         try {
-            // 3. Chama a função que você criou na pasta /api/gemini.js
-            const response = await fetch('/api/gemini', { // O caminho tem que começar com barra /
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(dadosDashboard)
-});
+            // Ajuste de precisão: removemos a barra inicial para caminhos relativos na Vercel
+            const response = await fetch('api/gemini', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dadosDashboard)
+            });
 
-            if (!response.ok) throw new Error("Erro no servidor");
+            if (!response.ok) {
+                const erroTexto = await response.text();
+                throw new Error(erroTexto);
+            }
 
             const data = await response.json();
-            
-            // 4. Mostra a resposta da IA na tela
             resText.innerText = data.reply;
 
         } catch (e) {
-            console.error(e);
-            resText.innerText = "❌ ERRO DE CONEXÃO. VERIFIQUE SE O SITE ESTÁ RODANDO NA VERCEL.";
+            console.error("ERRO DETALHADO:", e);
+            resText.innerText = "❌ ERRO NO MOTOR DA IA. VERIFIQUE OS LOGS NA VERCEL.";
         }
     }
 </script>
