@@ -517,33 +517,40 @@
     }
 </script>
 
-<script type="module">
-    import { GoogleGenerativeAI } from "@google/generative-ai";
-    const genAI = new GoogleGenerativeAI("AIzaSyDutmHbqUrdKrtOtsKoz1DtQqsI6_bQe-c");
-
+<script>
     window.consultarIA_EuroDiesel = async function() {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const resBox = document.getElementById('IA-RESPONSE');
         const resText = document.getElementById('IA-TEXT');
         
+        // 1. Efeito visual de carregamento
         resBox.classList.remove('HIDDEN');
-        resText.innerText = "IA ANALISANDO PERFORMANCE DA EURO DIESEL...";
+        resText.innerText = "⚙️ EURO DIESEL AI: CONECTANDO AO SERVIDOR MASTER...";
 
-        // Pega os valores reais que já estão na tela
-        const s = document.getElementById('VAL-S').innerText;
-        const p = document.getElementById('VAL-P').innerText;
-        const g = document.getElementById('VAL-G').innerText;
-
-        const prompt = `Você é o consultor master da Euro Diesel Mecatrônica. 
-        Analise esses números atuais: Serviços ${s}, Peças ${p}, Total ${g}.
-        Dê um conselho curto, profissional e motivador para o dono da oficina sobre como aumentar o faturamento ou equilibrar esses números. 
-        Fale como um especialista em mecatrônica diesel. Máximo 3 frases.`;
+        // 2. Coleta os dados reais do seu Dashboard
+        const dadosDashboard = {
+            servicos: document.getElementById('VAL-S').innerText,
+            pecas: document.getElementById('VAL-P').innerText,
+            total: document.getElementById('VAL-G').innerText
+        };
 
         try {
-            const result = await model.generateContent(prompt);
-            resText.innerText = result.response.text();
-        } catch (e) { 
-            resText.innerText = "ERRO: VERIFIQUE SUA CHAVE API NO CÓDIGO."; 
+            // 3. Chama a função que você criou na pasta /api/gemini.js
+            const response = await fetch('/api/gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dadosDashboard)
+            });
+
+            if (!response.ok) throw new Error("Erro no servidor");
+
+            const data = await response.json();
+            
+            // 4. Mostra a resposta da IA na tela
+            resText.innerText = data.reply;
+
+        } catch (e) {
+            console.error(e);
+            resText.innerText = "❌ ERRO DE CONEXÃO. VERIFIQUE SE O SITE ESTÁ RODANDO NA VERCEL.";
         }
     }
 </script>
