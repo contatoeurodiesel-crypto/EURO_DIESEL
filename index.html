@@ -159,6 +159,16 @@
             .MAIN-WRAPPER { padding: 20px 15px 100px 15px; }
             .STATS-GRID { grid-template-columns: 1fr; }
         }
+        @keyframes pulsar-neon {
+    0% { box-shadow: 0 0 5px var(--PRIMARY); }
+    50% { box-shadow: 0 0 20px var(--ACCENT); }
+    100% { box-shadow: 0 0 5px var(--PRIMARY); }
+}
+
+.BTN-MASTER[onclick*="consultarIA"] {
+    animation: pulsar-neon 2s infinite;
+    border: 1px solid var(--PRIMARY);
+}
     </style>
 
     <script type="importmap">
