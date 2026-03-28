@@ -545,11 +545,11 @@
 
         try {
             // 3. Chama a função que você criou na pasta /api/gemini.js
-            const response = await fetch('/api/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dadosDashboard)
-            });
+            const response = await fetch('/api/gemini', { // O caminho tem que começar com barra /
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dadosDashboard)
+});
 
             if (!response.ok) throw new Error("Erro no servidor");
 
