@@ -109,18 +109,19 @@
 
     <div id="AUTH-SCREEN" class="MODAL">
         <div id="LOGIN-BOX" class="MODAL-CONTENT">
-            <h1 class="LOGO-EURO"><span>EURO</span> <span>DIESEL</span></h1>
+            <h1 style="color: var(--PRIMARY); text-align:center; margin-bottom:30px;">EURO DIESEl</h1>
             <input type="text" id="U-LOGIN" placeholder="USUÁRIO">
             <input type="password" id="P-LOGIN" placeholder="SENHA">
-            <button class="BTN-MASTER" onclick="tentarLogin()">ENTRAR NO SISTEMA</button>
-            <p style="text-align:center; margin-top:25px; font-size:0.8rem; color:#888;">ACESSO RESTRITO <b style="color: var(--PRIMARY); cursor:pointer;" onclick="switchAuth('REG-BOX')">CADASTRE-SE</b></p>
+            <button id="BTN-ENTRAR" class="BTN-MASTER" onclick="tentarLogin()">ENTRAR</button>
+            <p style="text-align:center; margin-top:30px; font-size:0.8rem; color:#888;">NÃO TEM CONTA? <b style="color: var(--PRIMARY); cursor:pointer;" onclick="switchAuth('REG-BOX')">CADASTRE-SE AQUI</b></p>
         </div>
         <div id="REG-BOX" class="MODAL-CONTENT HIDDEN">
-            <h2 style="text-align:center; color: var(--SUCCESS); font-family:Orbitron;">CADASTRO</h2>
+            <h2 style="text-align:center; color: var(--SUCCESS);">CADASTRO</h2>
             <input type="text" id="U-REG" placeholder="NOME COMPLETO">
-            <input type="password" id="P-REG" placeholder="SENHA">
+            <input type="password" id="P-REG" placeholder="CRIE SUA SENHA">
             <input type="text" id="T-REG" placeholder="TOKEN DE ATIVAÇÃO">
-            <button class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">ATIVAR CONTA</button>
+            <button id="BTN-REG" class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">ATIVAR CONTA</button>
+            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 15px; font-size: 0.75rem;" onclick="window.open('https://wa.me/5569999999904?text=SOLICITO%20TOKEN')">OBTER TOKEN</button>
             <p style="text-align:center; margin-top:20px; font-size:0.8rem; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR AO LOGIN</p>
         </div>
     </div>
