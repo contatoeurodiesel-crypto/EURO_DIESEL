@@ -243,21 +243,26 @@
     
     <div id="MODAL-TOKEN" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3 style="font-family:Orbitron; margin-bottom:25px; text-align: center;">GERAR TOKEN ACESSO</h3>
-            <input type="number" id="M-TOKEN-S" value="12000" placeholder="Meta Serv">
-            <input type="number" id="M-TOKEN-P" value="8000" placeholder="Meta Peça">
-            <input type="number" id="M-TOKEN-G" value="20000" placeholder="Meta Geral">
+            <h3 style="font-family:Orbitron; margin-bottom:25px; text-align: center; color: var(--GOLD);">LIBERAR NOVO ACESSO</h3>
+            <label style="font-size:0.7rem; color:#555;">METAS SUGERIDAS:</label>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                <input type="number" id="M-TOKEN-S" value="12000" placeholder="Meta Serv">
+                <input type="number" id="M-TOKEN-P" value="8000" placeholder="Meta Peça">
+            </div>
+            <input type="number" id="M-TOKEN-G" value="20000" placeholder="Meta Geral Total">
             
-            <button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE ÚNICA</button>
+            <button class="BTN-MASTER" onclick="gerarToken()">GERAR TOKEN CRIPTOGRAFADO</button>
             
-            <div id="TK-BOX" class="HIDDEN" style="margin-top:20px; padding:20px; background:rgba(0,0,0,0.5); border-radius:12px; text-align:center; border: 1px dashed var(--PRIMARY);">
-                <b id="TK-VAL" style="color: var(--PRIMARY); font-size:1.2rem; font-family:Orbitron; letter-spacing: 2px;"></b>
-                <button class="BTN-MASTER" style="margin-top: 15px; background: #25D366; font-size: 0.7rem;" onclick="enviarTokenWhats()">
-                    <span class="material-icons-outlined">share</span> ENVIAR VIA WHATSAPP
+            <div id="TK-BOX" class="HIDDEN" style="margin-top:20px; padding:25px; background:rgba(0,0,0,0.6); border-radius:20px; text-align:center; border: 1px solid var(--PRIMARY);">
+                <span style="font-size:0.7rem; color:var(--PRIMARY); letter-spacing:2px;">TOKEN GERADO:</span>
+                <div id="TK-VAL" style="color: #FFF; font-size:1.5rem; font-family:Orbitron; margin: 15px 0; letter-spacing: 3px; text-shadow: 0 0 10px var(--PRIMARY);"></div>
+                
+                <button class="BTN-MASTER BTN-WPP" onclick="enviarTokenWhats()">
+                    <span class="material-icons-outlined">send</span> ENVIAR  WHATSAPP
                 </button>
             </div>
             
-            <button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button>
+            <button style="width:100%; background:none; border:none; color:#444; margin-top:20px; font-weight:bold; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR JANELA</button>
         </div>
     </div>
 
