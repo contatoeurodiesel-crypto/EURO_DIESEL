@@ -2,8 +2,8 @@ export default async function handler(req, res) {
   const { servicos, pecas } = req.body;
   const API_KEY = process.env.GEMINI_KEY;
   
-  // URL DIRETA PARA A VERSÃO ESTÁVEL v1 (Isso evita o erro 404 da v1beta)
-  const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+  // URL AJUSTADA PARA A ROTA QUE O GOOGLE EXIGE NO MOMENTO
+  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
   try {
     const response = await fetch(URL, {
@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // Se o Google devolver erro, pegamos a mensagem real aqui
     if (data.error) {
       throw new Error(data.error.message);
     }
@@ -28,6 +29,6 @@ export default async function handler(req, res) {
     res.status(200).json({ reply });
 
   } catch (error) {
-    res.status(500).json({ reply: "ERRO DE COMUNICAÇÃO: " + error.message });
+    res.status(500).json({ reply: "ERRO DE MOTOR: " + error.message });
   }
 }
