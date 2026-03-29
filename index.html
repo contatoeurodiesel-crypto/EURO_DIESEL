@@ -544,25 +544,19 @@
         };
 
         try {
-            // Ajuste de precisão: removemos a barra inicial para caminhos relativos na Vercel
-            const response = await fetch('/api', { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dadosDashboard)
-            });
+        const response = await fetch('/api', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosDashboard)
+        });
 
-            if (!response.ok) {
-                const erroTexto = await response.text();
-                throw new Error(erroTexto);
-            }
+        const data = await response.json();
+        resText.innerText = data.reply;
 
-            const data = await response.json();
-            resText.innerText = data.reply;
-
-        } catch (e) {
-            console.error("ERRO DETALHADO:", e);
-            resText.innerText = "❌ ERRO NO MOTOR DA IA. VERIFIQUE OS LOGS NA VERCEL.";
-        }
+    } catch (e) {
+        console.error("ERRO:", e);
+        resText.innerText = "❌ ERRO: VERIFIQUE SE A CHAVE GEMINI_KEY ESTÁ NA VERCEL.";
+    }
     }
 </script>
 
