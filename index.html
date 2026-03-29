@@ -374,45 +374,37 @@ async function eliminarDefinitivo(idDoBanco) {
     renderDashboard(); 
 }
 
-    function renderDashboard() {
-        let dadosRaw = []; let meta = {s:12000, p:8000, g:20000};
-        const allUsers = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        document.getElementById('BTN-MASTER-EDIT').classList.add('HIDDEN');
-        if(userLogado === "LEANDRO" && alvoView !== "GLOBAL" && alvoView !== "LEANDRO") document.getElementById('BTN-MASTER-EDIT').classList.remove('HIDDEN');
+    async function renderDashboard() {
+    // Busca os dados da API (do Banco Neon)
+    const response = await fetch('/api');
+    const dadosBanco = await response.json();
+    
+    let s=0, p=0, g=0; 
+    const tb = document.getElementById('MAIN-TABLE'); 
+    tb.innerHTML = "";
 
-        if(alvoView === "GLOBAL") {
-            meta = {s:0, p:0, g:0};
-            allUsers.forEach(u => {
-                const d = JSON.parse(localStorage.getItem('ed_data_' + u.u) || "[]");
-                dadosRaw = [...dadosRaw, ...d.map(i => ({...i, dono: u.u}))];
-                meta.s += Number(u.metas.s); meta.p += Number(u.metas.p); meta.g += Number(u.metas.g);
-            });
-        } else {
-            dadosRaw = JSON.parse(localStorage.getItem('ed_data_' + alvoView) || "[]");
-            const u = allUsers.find(x => x.u === alvoView) || {metas:meta};
-            meta = u.metas;
-        }
+    // Filtra os dados conforme quem está logado ou se é visão Global
+    const dadosFiltrados = (alvoView === "GLOBAL") ? dadosBanco : dadosBanco.filter(x => x.usuario === alvoView);
 
-        let s=0, p=0, g=0; const tb = document.getElementById('MAIN-TABLE'); tb.innerHTML = "";
-        dadosRaw.sort((a,b) => new Date(b.data) - new Date(a.data)).forEach((item, idx) => {
-            const v = parseFloat(item.val) || 0;
-            if(userLogado !== "LEANDRO" && item.excluido) return;
-            if(!item.excluido) { g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v; }
-            tb.innerHTML += `<tr class="${item.excluido ? 'ITEM-EXCLUIDO' : ''}">
-                <td style="color:${item.tipo === 'SERVIÇO' ? 'var(--PRIMARY)' : 'var(--SUCCESS)'}">${item.tipo}</td>
-                <td>${item.desc} ${item.dono?'<br><small style="color:var(--GOLD)">@'+item.dono+'</small>':''}</td>
-                <td style="font-family:Orbitron">R$ ${v.toLocaleString()}</td>
-                <td>${userLogado === "LEANDRO" ? `<button style="background:none; border:1px solid #333; color:var(--DANGER); padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="eliminarDefinitivo('${item.dono || alvoView}', ${idx})">DELETAR</button>` : `<button style="background:none; border:none; color:#444; cursor:pointer;" onclick="excluirTemp(${idx})">APAGAR</button>`}</td>
-            </tr>`;
-        });
-        
-        const upd = (id, v, m) => {
-            const perc = m > 0 ? Math.min((v/m)*100, 100) : 0;
-            document.getElementById('BAR-'+id).style.width = perc + "%";
-            document.getElementById('VAL-'+id).innerText = `R$ ${v.toLocaleString()} / ${(m/1000)}K`;
-        };
-        upd('S', s, meta.s); upd('P', p, meta.p); upd('G', g, meta.g);
-    }
+    dadosFiltrados.forEach((item) => {
+        const v = parseFloat(item.valor) || 0;
+        g += v; 
+        if(item.tipo === 'SERVIÇO') s += v; else p += v;
+
+        tb.innerHTML += `<tr>
+            <td style="color:${item.tipo === 'SERVIÇO' ? 'var(--PRIMARY)' : 'var(--SUCCESS)'}">${item.tipo}</td>
+            <td>${item.descricao}</td>
+            <td style="font-family:Orbitron">R$ ${v.toLocaleString()}</td>
+            <td>
+                <button style="background:none; border:1px solid #333; color:var(--DANGER); padding:5px 10px; border-radius:5px; cursor:pointer;" 
+                onclick="eliminarDefinitivo(${item.id})">DELETAR</button>
+            </td>
+        </tr>`;
+    });
+    
+    // Atualiza as barras de progresso (metas)
+    // ... (mantenha seu código das barras aqui)
+}
 
     // --- FUNÇÕES AUXILIARES ---
     function openModal(id) { document.getElementById(id).classList.remove('HIDDEN'); }
