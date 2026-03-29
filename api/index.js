@@ -3,8 +3,7 @@ export default async function handler(req, res) {
   const API_KEY = process.env.GEMINI_KEY;
   
   // Rota estável para chaves novas
-  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
+  const URL = https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY};
   try {
     const response = await fetch(URL, {
       method: 'POST',
