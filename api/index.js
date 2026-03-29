@@ -1,26 +1,33 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
-  // Inicializa a IA
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+  const { servicos, pecas } = req.body;
+  const API_KEY = process.env.GEMINI_KEY;
+  
+  // URL DIRETA PARA A VERSÃO ESTÁVEL v1 (Isso evita o erro 404 da v1beta)
+  const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
   try {
-    // Forçamos o modelo estável e preparamos os dados
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const { servicos, pecas } = req.body;
+    const response = await fetch(URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Você é o Engenheiro Chefe da Euro Diesel. Analise: Serviços R$ ${servicos} e Peças R$ ${pecas}. Dê uma dica técnica de 2 frases sobre manutenção Common Rail, Scania ou Volvo.`
+          }]
+        }]
+      })
+    });
 
-    const prompt = `Analise como engenheiro mecatrônico da Euro Diesel: Serviços R$ ${servicos}, Peças R$ ${pecas}. Dê uma dica técnica curta e profissional.`;
+    const data = await response.json();
 
-    // Gerando o conteúdo
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    if (data.error) {
+      throw new Error(data.error.message);
+    }
 
-    res.status(200).json({ reply: text });
+    const reply = data.candidates[0].content.parts[0].text;
+    res.status(200).json({ reply });
 
   } catch (error) {
-    // Log detalhado para o Dashboard da Vercel
-    console.error("ERRO GOOGLE API:", error);
-    res.status(500).json({ reply: "ERRO DE MOTOR: " + error.message });
+    res.status(500).json({ reply: "ERRO DE COMUNICAÇÃO: " + error.message });
   }
 }
