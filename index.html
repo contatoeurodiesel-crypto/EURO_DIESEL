@@ -305,15 +305,30 @@
     async function tentarLogin() {
     const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
     const p = document.getElementById('P-LOGIN').value;
-    
-    // Busca usuários reais do Neon
-    const res = await fetch('/api?tipo=usuarios');
-    const users = await res.json();
 
-    if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
-    else {
+    // 1. ACESSO MESTRE (Entra mesmo se o banco estiver fora do ar)
+    if (u === "LEANDRO" && p === "12344321") {
+        console.log("EURO DIESEL: ACESSO MESTRE RECONHECIDO.");
+        logar("LEANDRO");
+        return;
+    }
+
+    // 2. ACESSO COLABORADORES (Busca no Neon)
+    try {
+        const res = await fetch('/api?tipo=usuarios');
+        if (!res.ok) throw new Error("Erro ao conectar no banco");
+        
+        const users = await res.json();
         const f = users.find(x => x.nome === u && x.senha === p);
-        if(f) logar(u); else alert("DADOS INVÁLIDOS!");
+
+        if (f) {
+            logar(u);
+        } else {
+            alert("ACESSO RESTRITO: USUÁRIO OU SENHA INVÁLIDOS!");
+        }
+    } catch (err) {
+        console.error("Erro no login:", err);
+        alert("ERRO DE CONEXÃO COM O BANCO NEON. TENTE NOVAMENTE.");
     }
 }
 
