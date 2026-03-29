@@ -339,23 +339,40 @@
     }
 
     // --- FUNÇÕES DE LANÇAMENTO (COM LIMPEZA ANTERIOR PRESERVADA) ---
-    function salvarItem() {
-        const descField = document.getElementById('IN-DESC');
-        const valField = document.getElementById('IN-VAL');
-        const tipoField = document.getElementById('IN-TIPO');
-        const d = descField.value.toUpperCase().trim(); const v = valField.value;
+    async function salvarItem() {
+    const d = document.getElementById('IN-DESC').value.toUpperCase().trim();
+    const v = document.getElementById('IN-VAL').value;
+    const t = document.getElementById('IN-TIPO').value;
 
-        if(!d || !v) return alert("PREENCHA TODOS OS CAMPOS!");
+    if(!d || !v) return alert("PREENCHA TODOS OS CAMPOS!");
 
-        sound.play(); 
-        let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-        s.push({tipo: tipoField.value, desc: d, val: v, excluido: false, data: new Date().toLocaleString()});
-        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s));
+    // Envia para o Banco de Dados Neon
+    const res = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario: alvoView, tipo: t, desc: d, val: v })
+    });
 
-        // RESET PROFISSIONAL
-        descField.value = ""; valField.value = ""; tipoField.selectedIndex = 0;
-        closeModal('MODAL-ADD'); renderDashboard();
+    if(res.ok) {
+        sound.play();
+        document.getElementById('IN-DESC').value = "";
+        document.getElementById('IN-VAL').value = "";
+        closeModal('MODAL-ADD');
+        renderDashboard(); // Recarrega do banco
     }
+}
+
+async function eliminarDefinitivo(idDoBanco) {
+    if(!confirm("EURO DIESEL: DESEJA REALMENTE APAGAR ESTE ITEM?")) return;
+
+    await fetch('/api', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: idDoBanco })
+    });
+
+    renderDashboard(); 
+}
 
     function renderDashboard() {
         let dadosRaw = []; let meta = {s:12000, p:8000, g:20000};
