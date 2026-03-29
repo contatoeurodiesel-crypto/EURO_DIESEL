@@ -302,30 +302,41 @@
     let userLogado = ""; let alvoView = "";
     const sound = new Audio('https://www.myinstants.com/media/sounds/cash-register-purchase.mp3');
 
-    function tentarLogin() {
-        const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
-        const p = document.getElementById('P-LOGIN').value;
-        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
-        else {
-            const f = users.find(x => x.u === u && x.p === p);
-            if(f) logar(u); else alert("ACESSO RESTRITO: DADOS INVÁLIDOS!");
-        }
-    }
+    async function tentarLogin() {
+    const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
+    const p = document.getElementById('P-LOGIN').value;
+    
+    // Busca usuários reais do Neon
+    const res = await fetch('/api?tipo=usuarios');
+    const users = await res.json();
 
-    function tentarRegistro() {
-        const u = document.getElementById('U-REG').value.toUpperCase().trim();
-        const p = document.getElementById('P-REG').value;
-        const t = document.getElementById('T-REG').value.toUpperCase().trim();
-        let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
-        if(!tks[t]) return alert("TOKEN INVÁLIDO!");
-        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        users.push({u, p, metas: tks[t]});
-        localStorage.setItem('euro_users', JSON.stringify(users));
-        delete tks[t]; localStorage.setItem('euro_tks', JSON.stringify(tks));
-        logar(u);
+    if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
+    else {
+        const f = users.find(x => x.nome === u && x.senha === p);
+        if(f) logar(u); else alert("DADOS INVÁLIDOS!");
     }
+}
 
+async function tentarRegistro() {
+    const u = document.getElementById('U-REG').value.toUpperCase().trim();
+    const p = document.getElementById('P-REG').value;
+    const t = document.getElementById('T-REG').value.toUpperCase().trim();
+    
+    // Verifica o token (LocalStorage ainda serve para o token temporário)
+    let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
+    if(!tks[t]) return alert("TOKEN INVÁLIDO!");
+
+    // Salva o novo usuário no Banco Neon
+    await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ acao: 'CADASTRAR_USUARIO', nome: u, senha: p })
+    });
+
+    delete tks[t]; 
+    localStorage.setItem('euro_tks', JSON.stringify(tks));
+    logar(u);
+}
     function logar(n) {
         userLogado = n; alvoView = n;
         document.getElementById('AUTH-SCREEN').classList.add('HIDDEN');
