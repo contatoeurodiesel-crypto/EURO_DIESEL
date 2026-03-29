@@ -1,32 +1,28 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ reply: "Método não permitido" });
+
   const { servicos, pecas } = req.body;
-  const API_KEY = process.env.GEMINI_KEY;
-  
-  // Rota estável para chaves novas
-  const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+
   try {
-    const response = await fetch(URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: `Analise como engenheiro da Euro Diesel: Serviços R$ ${servicos} e Peças R$ ${pecas}. Dê uma dica técnica curta sobre Scania ou Volvo.`
-          }]
-        }]
-      })
-    });
+    // O SDK oficial gerencia a versão (v1/v1beta) sozinho
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const data = await response.json();
+    const prompt = `Atue como Engenheiro Master da Euro Diesel. 
+    Analise estes dados: Serviços R$ ${servicos} e Peças R$ ${pecas}. 
+    Dê uma dica técnica curta (máximo 2 linhas) para mecânicos de Scania ou Volvo. 
+    Responda de forma profissional e tecnológica.`;
 
-    if (data.error) {
-      return res.status(500).json({ reply: "ERRO DE CHAVE: " + data.error.message });
-    }
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
 
-    const reply = data.candidates[0].content.parts[0].text;
-    res.status(200).json({ reply });
+    res.status(200).json({ reply: text });
 
   } catch (error) {
-    res.status(500).json({ reply: "ERRO DE SISTEMA: " + error.message });
+    console.error("Erro na IA:", error);
+    res.status(500).json({ reply: "ERRO TÉCNICO: " + error.message });
   }
 }
