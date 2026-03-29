@@ -1,45 +1,40 @@
-import { createClient } from '@vercel/postgres';
-
-export default async function handler(req, res) {
-    const client = createClient();
-    await client.connect();
+// Procure a parte do POST que trata a IA no seu api/index.js e substitua por isto:
+if (req.method === 'POST' && req.body.total) {
+    const { servicos, pecas, total } = req.body;
+    
+    // Ele vai pegar a sua chave gsk_... que está na Vercel
+    const KEY = process.env.GEMINI_KEY; 
 
     try {
-        // --- AÇÃO: APAGAR LANÇAMENTO (DELETE) ---
-        if (req.method === 'DELETE') {
-            const { id } = req.body;
-            await client.sql`UPDATE euro_lancamentos SET excluido = true WHERE id = ${id}`;
-            return res.status(200).json({ success: true });
-        }
+        const aiRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile", // Modelo ultra rápido da Groq
+                messages: [
+                    {
+                        role: "system",
+                        content: "Você é o consultor técnico da EURO DIESEL. Analise os dados de faturamento e dê um insight motivador e curto em português."
+                    },
+                    {
+                        role: "user",
+                        content: `Serviços: ${servicos}, Peças: ${pecas}, Total: ${total}.`
+                    }
+                ]
+            })
+        });
 
-        if (req.method === 'POST') {
-            const { acao, usuario, tipo, desc, val, nome, senha } = req.body;
+        const aiData = await aiRes.json();
+        
+        // A Groq entrega o texto neste caminho aqui:
+        const reply = aiData.choices[0].message.content;
+        return res.status(200).json({ reply });
 
-            // --- AÇÃO: CADASTRAR NOVO USUÁRIO ---
-            if (acao === 'CADASTRAR_USUARIO') {
-                await client.sql`INSERT INTO euro_usuarios (nome, senha) VALUES (${nome}, ${senha}) ON CONFLICT (nome) DO NOTHING`;
-                return res.status(200).json({ success: true });
-            }
-
-            // --- AÇÃO: SALVAR PEÇA OU SERVIÇO ---
-            await client.sql`INSERT INTO euro_lancamentos (usuario, tipo, descricao, valor) VALUES (${usuario}, ${tipo}, ${desc}, ${val})`;
-            return res.status(200).json({ success: true });
-        }
-
-        // --- AÇÃO: BUSCAR USUÁRIOS (Para o Login) ---
-        if (req.query.tipo === 'usuarios') {
-            const { rows } = await client.sql`SELECT * FROM euro_usuarios`;
-            return res.status(200).json(rows);
-        }
-
-        // --- AÇÃO: BUSCAR TODOS OS LANÇAMENTOS (Dashboard) ---
-        const { rows } = await client.sql`SELECT * FROM euro_lancamentos WHERE excluido = false ORDER BY data_registro DESC`;
-        return res.status(200).json(rows);
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: error.message });
-    } finally {
-        await client.end();
+    } catch (e) {
+        console.error("ERRO GROQ:", e);
+        return res.status(500).json({ reply: "FALHA AO CONECTAR COM A INTELIGÊNCIA GROQ." });
     }
 }
